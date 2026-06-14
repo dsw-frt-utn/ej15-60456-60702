@@ -45,12 +45,12 @@ namespace Dsw2026Ej15.Data
 
         public List<Doctor> GetActiveDoctors()
         {
-            throw new NotImplementedException();
+            return Doctors.Where(d => d.IsActive).ToList();
         }
 
         public Doctor? GetDoctorById(Guid id)
         {
-            throw new NotImplementedException();
+            return Doctors.FirstOrDefault(d => d.Id == id && d.IsActive);
         }
 
         public bool DeactivateDoctor(Guid id)
