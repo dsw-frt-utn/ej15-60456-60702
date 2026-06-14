@@ -40,7 +40,7 @@ namespace Dsw2026Ej15.Data
 
         public void AddDoctor(Doctor doctor)
         {
-            throw new NotImplementedException();
+            Doctors.Add(doctor);
         }
 
         public List<Doctor> GetActiveDoctors()
@@ -55,7 +55,13 @@ namespace Dsw2026Ej15.Data
 
         public bool DeactivateDoctor(Guid id)
         {
-            throw new NotImplementedException();
+            var doctor = GetDoctorById(id);
+            if (doctor != null)
+            {
+                doctor.IsActive = false; // Borrado lógico
+                return true;
+            }
+            return false;
         }
     }
 }
