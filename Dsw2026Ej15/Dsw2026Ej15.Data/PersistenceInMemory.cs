@@ -1,4 +1,5 @@
-﻿using Dsw2026Ej15.Domain.Entities;
+﻿using Dsw2026Ej15.Data.Dto;
+using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,48 +10,51 @@ namespace Dsw2026Ej15.Data
 {
     public class PersistenceInMemory : IPersistence
     {
-        public List<Doctor> Doctors { get; private set; } = new ();
-        public List<Speciality> Specialities { get; private set; } = new();
+        
+
+        public List<Doctor> _doctors { get; private set; } = new ();
+        public List<Speciality> _specialities { get; private set; } = new();
 
         public PersistenceInMemory()
         {
             LoadSpecialities();
         }
+        public Speciality? GetSpecialityById(Guid id)
+        {
+            return _specialities.SingleOrDefault(s => s.Id == id);
+        }
         private void LoadSpecialities()
         {
-            string filePath = "specialities.json";
-
-            if (File.Exists(filePath))
+            try
             {
-                var json = File.ReadAllText(filePath);
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                var data = JsonSerializer.Deserialize<List<Speciality>>(json, options);
+                string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources"
+                    , "specialities.json");// Base directory, incluye Dsw.., api, bin, etc. Sources 
+                var json = File.ReadAllText(jsonPath);
+                var specialities = JsonSerializer.Deserialize<List<SpecialityDto>>(json
+                    , new JsonSerializerOptions()
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }) ?? [];
+                _specialities = [.. specialities.Select(s => new Speciality(s.Name, s.Description, s.Id))];
 
-                if(data != null)
-                {
-                    Specialities = data;
-                }
 
             }
-            else 
-            {
-                Console.WriteLine("Not found");
-            }
+            catch (Exception ex) { }
         }
 
         public void AddDoctor(Doctor doctor)
         {
-            Doctors.Add(doctor);
+            _doctors.Add(doctor);
         }
 
         public List<Doctor> GetActiveDoctors()
         {
-            return Doctors.Where(d => d.IsActive).ToList();
+            return _doctors.Where(d => d.IsActive).ToList();
         }
 
         public Doctor? GetDoctorById(Guid id)
         {
-            return Doctors.FirstOrDefault(d => d.Id == id && d.IsActive);
+            return _doctors.FirstOrDefault(d => d.Id == id && d.IsActive);
         }
 
         public bool DeactivateDoctor(Guid id)

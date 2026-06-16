@@ -17,15 +17,22 @@ namespace Dsw2026Ej15.Api
             //Agrego singleton
             builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
 
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            //builder.Services.AddOpenApi();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
+            { 
+                app.UseSwagger();
+                app.UseSwaggerUI();
+
+                //falta swagger
+
             }
 
             app.UseAuthorization();
