@@ -1,4 +1,4 @@
-
+using Dsw2026Ej15.Api.Middlewares;
 using Dsw2026Ej15.Data;
 using Dsw2026Ej15.Domain.Interfaces;
 
@@ -20,25 +20,23 @@ namespace Dsw2026Ej15.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            //builder.Services.AddOpenApi();
+            builder.Services.AddHealthChecks();
 
             var app = builder.Build();
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             { 
                 app.UseSwagger();
                 app.UseSwaggerUI();
-
-                //falta swagger
-
             }
 
             app.UseAuthorization();
-
-
             app.MapControllers();
+
+            app.MapHealthChecks("/health-check");
 
             app.Run();
         }

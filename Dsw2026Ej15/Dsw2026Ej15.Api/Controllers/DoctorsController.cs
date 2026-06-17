@@ -1,25 +1,27 @@
 ﻿using Dsw2026Ej15.Api.Models;
+using Dsw2026Ej15.Domain.Exceptions;
 using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace Dsw2026Ej15.Api.Controllers;
 
 [ApiController]
-[Route("api/doctors")] //todo en minuscula por convencion
+[Route("api/doctors")] 
 public class DoctorsController : ControllerBase
 {
-    //Inyecto la persistencia
+    
     private readonly IPersistence _persistence;
     public DoctorsController(IPersistence persistence)
     {
-        //Inyeccion de dependencias
+        
         _persistence = persistence;
     }
 
-    //Verbo
+    
     [HttpPost]
-    public async Task<IActionResult> CreateDoctor([FromBody]DoctorModel.Request request) //de ahora en mas, asyncronicos en controladores
+    public async Task<IActionResult> CreateDoctor([FromBody]DoctorModel.Request request) 
     {
         if(string.IsNullOrWhiteSpace(request.Name) || 
             string.IsNullOrWhiteSpace(request.LicenseNumber))
@@ -31,7 +33,7 @@ public class DoctorsController : ControllerBase
             return BadRequest("La especialidad no existe");
         }
 
-        //crear obj doctor, del dominio, new Doctor(...),
+        
         var newDoctor = new Doctor
         {
             Name = request.Name,
@@ -41,8 +43,43 @@ public class DoctorsController : ControllerBase
         };
         _persistence.AddDoctor(newDoctor);
 
-        //return Ok(); //Es un metodo que tiene definido controllerbase, que representa un codigo de estado200
+        
         return Created($"api/doctors/{newDoctor.Id}", newDoctor); 
     }
-    //Por ahroa, hacemos las validaciones aca
+
+
+    [HttpGet]
+    public async Task<IActionResult> GetDoctorsActive()
+    {
+        var doctorsActive = _persistence.GetActiveDoctors();
+        return Ok(doctorsActive);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetDoctorById(Guid id)
+    {
+        var doctor = _persistence.GetDoctorById(id);
+
+        if (doctor == null || !doctor.IsActive)
+        {
+            throw new ValidationException("No existe doctor o esta inactivo");
+            return NotFound();
+        }
+
+        return Ok(doctor);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteDoctorById(Guid id)
+    {
+        if (_persistence.GetDoctorById(id) == null || _persistence.GetDoctorById(id).IsActive == false)
+        {
+            throw new ValidationException("No existe doctor o esta inactivo");
+            return NotFound();
+        }
+
+        _persistence.DeactivateDoctor(id);
+
+        return NoContent();
+    }
 }
