@@ -26,11 +26,12 @@ public class DoctorsController : ControllerBase
         if(string.IsNullOrWhiteSpace(request.Name) || 
             string.IsNullOrWhiteSpace(request.LicenseNumber))
         {
-            return BadRequest("El nombre y la matrícula son requeridos");
+            
+            throw new ValidationException("El nombre y la matrícula son requeridos");
         }
         var speciality = _persistence.GetSpecialityById(request.SpecialityId);
-        if (speciality == null) { 
-            return BadRequest("La especialidad no existe");
+        if (speciality == null) {
+            throw new ValidationException("La especialidad no existe");
         }
 
         
@@ -62,8 +63,8 @@ public class DoctorsController : ControllerBase
 
         if (doctor == null || !doctor.IsActive)
         {
-            throw new ValidationException("No existe doctor o esta inactivo");
-            return NotFound();
+            throw new NotFoudException("No existe doctor o esta inactivo");
+            
         }
 
         return Ok(doctor);
@@ -74,8 +75,8 @@ public class DoctorsController : ControllerBase
     {
         if (_persistence.GetDoctorById(id) == null || _persistence.GetDoctorById(id).IsActive == false)
         {
-            throw new ValidationException("No existe doctor o esta inactivo");
-            return NotFound();
+            throw new NotFoudException("No existe doctor o esta inactivo");
+            
         }
 
         _persistence.DeactivateDoctor(id);

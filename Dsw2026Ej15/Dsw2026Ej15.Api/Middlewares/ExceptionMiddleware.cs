@@ -1,4 +1,7 @@
-﻿using System.Text.Json;
+﻿using Dsw2026Ej15.Domain.Exceptions;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Dsw2026Ej15.Api.Middlewares
 {
@@ -20,32 +23,29 @@ namespace Dsw2026Ej15.Api.Middlewares
 
                 await _next(context);
             }
-            catch (Dsw2026Ej15.Domain.Exceptions.ValidationException ex)
-            {
-
-                await HandleExceptionAsync(context, StatusCodes.Status400BadRequest, ex.Message);
-            }
+            
             catch (Exception ex)
             {
-
-                await HandleExceptionAsync(context, StatusCodes.Status500InternalServerError, "Ha ocurrido un problema interno en el servidor.");
+                await HandleExceptionAsync(context, ex);
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, int statusCode, string message)
+        private static Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = statusCode;
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-
-            var response = new
+            if(ex is ValidationException) 
             {
-                Error = message
-            };
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            }
+            if(ex is NotFoudException)
+            {
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+            }
 
-
-            return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            return context.Response.WriteAsync(JsonSerializer.Serialize(new { Error = ex.Message}));
         }
     }
 }
