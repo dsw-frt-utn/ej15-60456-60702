@@ -40,6 +40,10 @@ namespace Dsw2026Ej15.Api.Middlewares
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
             }
+            if(ex is NotFoudException)
+            {
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+            }
 
             return context.Response.WriteAsync(JsonSerializer.Serialize(new { Error = ex.Message}));
         }

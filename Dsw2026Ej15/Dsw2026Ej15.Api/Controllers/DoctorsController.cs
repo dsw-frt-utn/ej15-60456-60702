@@ -63,7 +63,7 @@ public class DoctorsController : ControllerBase
 
         if (doctor == null || !doctor.IsActive)
         {
-            throw new ValidationException("No existe doctor o esta inactivo");
+            throw new NotFoudException("No existe doctor o esta inactivo");
             
         }
 
@@ -75,7 +75,7 @@ public class DoctorsController : ControllerBase
     {
         if (_persistence.GetDoctorById(id) == null || _persistence.GetDoctorById(id).IsActive == false)
         {
-            throw new ValidationException("No existe doctor o esta inactivo");
+            throw new NotFoudException("No existe doctor o esta inactivo");
             
         }
 
