@@ -16,28 +16,15 @@ public class PersistenceEf : IPersistence
         _context = context;
     }
 
-    public List<Doctor> _doctors => throw new NotImplementedException();
-
-    public List<Speciality> _specialities => throw new NotImplementedException();
-
-    public Task AddDoctor(Doctor doctor)
+    public async Task<IEnumerable<Doctor>> GetAllDoctos()
     {
-        throw new NotImplementedException();
+        return  _context.Doctors.Where(d => d.IsActive);
     }
 
-    public bool DeactivateDoctor(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public List<Doctor> GetActiveDoctors()
-    {
-        throw new NotImplementedException();
-    }
 
     public async Task<Doctor?> GetDoctorById(Guid id)
     {
-        return await _context.Doctors.FirstOrDefaultAsync(d => d.Id = id && d.IsActive);
+        return await _context.Doctors.FirstOrDefaultAsync(d => d.Id == id && d.IsActive);
     }
 
     public async Task SaveDoctor(Doctor doctor)
@@ -54,4 +41,6 @@ public class PersistenceEf : IPersistence
     {
         throw new NotImplementedException();
     }
+
+    
 }

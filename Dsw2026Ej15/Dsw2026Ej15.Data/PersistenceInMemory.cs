@@ -19,9 +19,9 @@ namespace Dsw2026Ej15.Data
         {
             LoadSpecialities();
         }
-        public Task<Speciality?> GetSpecialityById(Guid id)
+        public async Task<Speciality?> GetSpecialityById(Guid id)
         {
-            return Task.FromResult(_specialities.SingleOrDefault(s => s.Id == id));
+            return _specialities.SingleOrDefault(s => s.Id == id);
         }
         private void LoadSpecialities()
         {
@@ -42,37 +42,26 @@ namespace Dsw2026Ej15.Data
             catch (Exception ex) { }
         }
 
-        public Task AddDoctor(Doctor doctor)
-        {
-            _doctors.Add(doctor);
-            return Task.CompletedTask;
-        }
-
-        public List<Doctor> GetActiveDoctors()
-        {
-            return _doctors.Where(d => d.IsActive).ToList();
-        }
-
-        public Task<Doctor?> GetDoctorById(Guid id)
-        {
-            var doctor = _doctors.FirstOrDefault(d => d.Id == id && d.IsActive);
-            return Task.FromResult(doctor);
         
+
+        public async Task<Doctor?> GetDoctorById(Guid id)
+        {
+            return _doctors.SingleOrDefault(d => d.Id == id && d.IsActive);
         }
         public async Task UpdateDoctor(Doctor doctor)
         {
             _doctors.Remove(doctor);
             _doctors.Add(doctor);
         }
-        public bool DeactivateDoctor(Guid id)
+        
+        public async Task<IEnumerable<Doctor>> GetAllDoctos()
         {
-            var doctor = GetDoctorById(id);
-            if (doctor != null)
-            {
-                doctor.IsActive = false; // Borrado lógico
-                return true;
-            }
-            return false;
+           return _doctors.Where(d => d.IsActive);
+        }
+
+        public async Task SaveDoctor(Doctor doctor)
+        {
+            _doctors.Add(doctor);
         }
     }
 }

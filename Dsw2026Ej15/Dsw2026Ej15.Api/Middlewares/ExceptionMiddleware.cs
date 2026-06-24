@@ -40,7 +40,7 @@ namespace Dsw2026Ej15.Api.Middlewares
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
             }
-            if(ex is NotFoudException)
+            if(ex is NotFoundException)
             {
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
             }
