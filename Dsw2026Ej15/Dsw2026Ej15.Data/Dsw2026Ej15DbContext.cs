@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Dsw2026Ej15.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,7 @@ namespace Dsw2026Ej15.Data
         {
 
         }
-        
+        public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Speciality> Specialities { get; set; }
     }
 }
