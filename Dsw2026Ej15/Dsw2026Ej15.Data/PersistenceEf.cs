@@ -32,14 +32,17 @@ public class PersistenceEf : IPersistence
         _context.Add(doctor);
         await _context.SaveChangesAsync();
     }
-    public Task<Speciality?> GetSpecialityById(Guid id)
+    public async Task<Speciality?> GetSpecialityById(Guid id)
     {
-        throw new NotImplementedException();
+        return await _context.Specialities.SingleOrDefaultAsync(s => s.Id == id);
     }
 
-    public Task UpdateDoctor(Doctor doctor)
+    public async Task UpdateDoctor(Doctor doctor)
     {
-        throw new NotImplementedException();
+        _context.Doctors.Update(doctor);
+        await _context.SaveChangesAsync();
+    }
+
     }
 
     

@@ -42,8 +42,6 @@ namespace Dsw2026Ej15.Data
             catch (Exception ex) { }
         }
 
-        
-
         public async Task<Doctor?> GetDoctorById(Guid id)
         {
             return _doctors.SingleOrDefault(d => d.Id == id && d.IsActive);
