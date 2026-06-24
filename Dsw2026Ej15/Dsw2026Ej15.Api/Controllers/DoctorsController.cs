@@ -78,9 +78,10 @@ public class DoctorsController : ControllerBase
             throw new NotFoudException("No existe doctor o esta inactivo");
             
         }
+        var doctor = (await GetDoctorById(id))!;
 
         _persistence.DeactivateDoctor(id);
-
+        await _persistence.UpdateDoctor((Doctor)doctor);
         return NoContent();
     }
 }

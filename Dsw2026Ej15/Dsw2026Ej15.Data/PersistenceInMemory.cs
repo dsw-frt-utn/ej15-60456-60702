@@ -56,7 +56,11 @@ namespace Dsw2026Ej15.Data
         {
             return _doctors.FirstOrDefault(d => d.Id == id && d.IsActive);
         }
-
+        public async Task UpdateDoctor(Doctor doctor)
+        {
+            _doctors.Remove(doctor);
+            _doctors.Add(doctor);
+        }
         public bool DeactivateDoctor(Guid id)
         {
             var doctor = GetDoctorById(id);

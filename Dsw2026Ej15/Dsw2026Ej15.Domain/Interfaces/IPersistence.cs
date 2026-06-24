@@ -20,6 +20,6 @@ namespace Dsw2026Ej15.Domain.Interfaces
         bool DeactivateDoctor(Guid id);
         Speciality? GetSpecialityById(Guid id);
 
-
+        Task UpdateDoctor(Doctor doctor);
     }
 }
