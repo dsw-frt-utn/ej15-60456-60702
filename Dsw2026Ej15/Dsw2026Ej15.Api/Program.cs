@@ -21,7 +21,7 @@ namespace Dsw2026Ej15.Api
             builder.Services.AddControllers();
             
             //Agrego singleton
-            builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
+            builder.Services.AddScoped<IPersistence, PersistenceEf>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

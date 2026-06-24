@@ -40,9 +40,9 @@ public class DoctorsController : ControllerBase
             Name = request.Name,
             LicenseNumber = request.LicenseNumber,
             IsActive = true,
-            Speciality = speciality
+            Speciality = await speciality
         };
-        _persistence.AddDoctor(newDoctor);
+        await _persistence.AddDoctor(newDoctor);
 
         
         return Created($"api/doctors/{newDoctor.Id}", newDoctor); 
@@ -59,7 +59,7 @@ public class DoctorsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetDoctorById(Guid id)
     {
-        var doctor = _persistence.GetDoctorById(id);
+        var doctor = await _persistence.GetDoctorById(id);
 
         if (doctor == null || !doctor.IsActive)
         {

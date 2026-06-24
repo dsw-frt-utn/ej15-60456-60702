@@ -19,9 +19,9 @@ namespace Dsw2026Ej15.Data
         {
             LoadSpecialities();
         }
-        public Speciality? GetSpecialityById(Guid id)
+        public Task<Speciality?> GetSpecialityById(Guid id)
         {
-            return _specialities.SingleOrDefault(s => s.Id == id);
+            return Task.FromResult(_specialities.SingleOrDefault(s => s.Id == id));
         }
         private void LoadSpecialities()
         {
@@ -42,9 +42,10 @@ namespace Dsw2026Ej15.Data
             catch (Exception ex) { }
         }
 
-        public void AddDoctor(Doctor doctor)
+        public Task AddDoctor(Doctor doctor)
         {
             _doctors.Add(doctor);
+            return Task.CompletedTask;
         }
 
         public List<Doctor> GetActiveDoctors()
@@ -52,9 +53,11 @@ namespace Dsw2026Ej15.Data
             return _doctors.Where(d => d.IsActive).ToList();
         }
 
-        public Doctor? GetDoctorById(Guid id)
+        public Task<Doctor?> GetDoctorById(Guid id)
         {
-            return _doctors.FirstOrDefault(d => d.Id == id && d.IsActive);
+            var doctor = _doctors.FirstOrDefault(d => d.Id == id && d.IsActive);
+            return Task.FromResult(doctor);
+        
         }
         public async Task UpdateDoctor(Doctor doctor)
         {

@@ -11,14 +11,14 @@ namespace Dsw2026Ej15.Domain.Interfaces
 
         List<Speciality> _specialities { get; }
 
-        void AddDoctor(Doctor doctor);
+        Task AddDoctor(Doctor doctor);
 
         List<Doctor> GetActiveDoctors();
 
-        Doctor? GetDoctorById(Guid id);
+        Task<Doctor?>  GetDoctorById(Guid id);
 
         bool DeactivateDoctor(Guid id);
-        Speciality? GetSpecialityById(Guid id);
+        Task<Speciality?> GetSpecialityById(Guid id);
 
         Task UpdateDoctor(Doctor doctor);
     }
