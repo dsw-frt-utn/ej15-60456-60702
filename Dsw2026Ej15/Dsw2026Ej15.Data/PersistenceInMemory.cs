@@ -19,10 +19,6 @@ namespace Dsw2026Ej15.Data
         {
             LoadSpecialities();
         }
-        public Speciality? GetSpecialityById(Guid id)
-        {
-            return _specialities.SingleOrDefault(s => s.Id == id);
-        }
         private void LoadSpecialities()
         {
             try
@@ -42,30 +38,34 @@ namespace Dsw2026Ej15.Data
             catch (Exception ex) { }
         }
 
-        public void AddDoctor(Doctor doctor)
+        //Métdos para Speciality
+        public async Task<Speciality?> GetSpecialityById(Guid id)
         {
-            _doctors.Add(doctor);
+            return _specialities.SingleOrDefault(s => s.Id == id);
         }
 
-        public List<Doctor> GetActiveDoctors()
+        //Métodos para Doctor
+        
+
+        public async Task<IEnumerable<Doctor>> GetActiveDoctors()
         {
             return _doctors.Where(d => d.IsActive).ToList();
         }
 
-        public Doctor? GetDoctorById(Guid id)
+        public async Task<Doctor?> GetDoctorById(Guid id)
         {
             return _doctors.FirstOrDefault(d => d.Id == id && d.IsActive);
         }
 
-        public bool DeactivateDoctor(Guid id)
+        public async Task AddDoctor(Doctor doctor)
         {
-            var doctor = GetDoctorById(id);
-            if (doctor != null)
-            {
-                doctor.IsActive = false; // Borrado lógico
-                return true;
-            }
-            return false;
+            _doctors.Add(doctor);
+        }
+
+        public async Task UpdateDoctor(Doctor doctor)
+        {
+            _doctors.Remove(doctor);
+            _doctors.Add(doctor);
         }
     }
 }

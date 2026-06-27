@@ -5,20 +5,25 @@ using Dsw2026Ej15.Domain.Entities;
 
 namespace Dsw2026Ej15.Domain.Interfaces
 {
+
+    //Hacer los métodos asincronos
     public interface IPersistence
     {
         List<Doctor> _doctors {  get; }
 
         List<Speciality> _specialities { get; }
 
-        void AddDoctor(Doctor doctor);
+        
+        //Métodos para doctor
+        Task<IEnumerable<Doctor>> GetActiveDoctors();
 
-        List<Doctor> GetActiveDoctors();
+        Task<Doctor?> GetDoctorById(Guid id);
 
-        Doctor? GetDoctorById(Guid id);
+        Task UpdateDoctor(Doctor doctor);
+        Task AddDoctor(Doctor doctor);
 
-        bool DeactivateDoctor(Guid id);
-        Speciality? GetSpecialityById(Guid id);
+        //Método para especialidades
+        Task<Speciality?> GetSpecialityById(Guid id);
 
 
     }

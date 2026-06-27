@@ -6,6 +6,8 @@ namespace Dsw2026Ej15.Domain.Entities;
 
 public class Speciality : BaseEntity
 {
+
+    private Speciality() { }
     public Speciality(string name, string description, Guid id)
     {
         Name = name;
