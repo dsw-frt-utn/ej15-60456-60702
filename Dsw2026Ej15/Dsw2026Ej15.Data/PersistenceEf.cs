@@ -18,13 +18,16 @@ public class PersistenceEf : IPersistence
 
     public async Task<IEnumerable<Doctor>> GetAllDoctos()
     {
-        return  _context.Doctors.Where(d => d.IsActive);
+        
+        return await _context.Doctors
+            .Include(nameof(Doctor.Speciality))
+            .Where(d => d.IsActive).ToListAsync(); 
     }
 
 
     public async Task<Doctor?> GetDoctorById(Guid id)
     {
-        return await _context.Doctors.FirstOrDefaultAsync(d => d.Id == id && d.IsActive);
+        return await _context.Doctors.Include(d => d.Speciality).SingleOrDefaultAsync(d => d.Id == id && d.IsActive);
     }
 
     public async Task SaveDoctor(Doctor doctor)
@@ -46,4 +49,4 @@ public class PersistenceEf : IPersistence
     }
 
     
-}
+

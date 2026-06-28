@@ -1,3 +1,4 @@
+using Dsw2026Ej15.Api.Configurations;
 using Dsw2026Ej15.Api.Middlewares;
 using Dsw2026Ej15.Data;
 using Dsw2026Ej15.Domain.Interfaces;
@@ -11,7 +12,8 @@ namespace Dsw2026Ej15.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var conectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=Dsw2026Ej15;Integrated Security=True;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True";
+            var conectionString = builder.Configuration
+                .GetConnectionString("DefaultConnection");
 
             builder.Services.AddDbContext<Dsw2026Ej15DbContext>(options =>
             {
@@ -19,9 +21,8 @@ namespace Dsw2026Ej15.Api
             });
 
             builder.Services.AddControllers();
-            
-            //Agrego singleton
-            builder.Services.AddScoped<IPersistence, PersistenceEf>();
+
+            builder.Services.addPersistence(); //Nuevo con el PersistenceConfigurationExtension
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -43,6 +44,15 @@ namespace Dsw2026Ej15.Api
             app.MapControllers();
 
             app.MapHealthChecks("/health-check");
+
+            using var scope = app.Services.CreateScope();
+            var service = scope.ServiceProvider;
+            var context = service.GetRequiredService<Dsw2026Ej15DbContext>();
+            context.SeedworkSpecialities(@"specialities.json");
+
+            //using define un bloque de ejecucion que el proposito es definir el ciclo de vida de
+            //un objeto, en este caso el scope, que se destruye al salir del bloque
+            //el tipo que se instancia, debe instancia IDisposable, para que se pueda destruir al salir del bloque
 
             app.Run();
         }

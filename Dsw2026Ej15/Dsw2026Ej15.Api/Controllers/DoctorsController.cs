@@ -47,7 +47,8 @@ public class DoctorsController : AppController
     [HttpGet()]
     public async Task<IActionResult> GetAllDoctors()
     {
-        var doctors = await _persistence.GetAllDoctos();
+        var doctors = await _persistence.GetAllDoctos(); //no hace el join por defendto, por rendimiento
+        //Los metodos son, Eagerly, lazy y Explicitly 
         return Ok(doctors.Select(d => new DoctorModel.Response(d.Name,d.LicenseNumber,
             d.Speciality?.Name)));
     }
