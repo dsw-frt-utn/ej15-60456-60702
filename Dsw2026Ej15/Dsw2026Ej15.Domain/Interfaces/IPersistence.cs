@@ -8,12 +8,7 @@ namespace Dsw2026Ej15.Domain.Interfaces
 
     //Hacer los métodos asincronos
     public interface IPersistence
-    {
-        List<Doctor> _doctors {  get; }
-
-        List<Speciality> _specialities { get; }
-
-        
+    {   
         //Métodos para doctor
         Task<IEnumerable<Doctor>> GetActiveDoctors();
 

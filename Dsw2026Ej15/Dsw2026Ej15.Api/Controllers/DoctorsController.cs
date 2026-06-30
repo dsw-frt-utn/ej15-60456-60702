@@ -43,18 +43,19 @@ public class DoctorsController : ControllerBase
             IsActive = true,
             Speciality = speciality
         };
-        _persistence.AddDoctor(newDoctor);
+        await _persistence.AddDoctor(newDoctor);
 
         
         return Created($"api/doctors/{newDoctor.Id}", newDoctor); 
     }
 
 
+
     [HttpGet]
     public async Task<IActionResult> GetDoctorsActive()
     {
         var doctorsActive = await _persistence.GetActiveDoctors();
-        return Ok(doctorsActive.Select(d => new DoctorModel.Response(d.Name, d.LicenseNumber, d.Speciality?.Name)));
+        return Ok(doctorsActive.Select(d => new DoctorModel.Response(d.Id, d.Name, d.LicenseNumber, d.Speciality?.Name)));
     }
 
     [HttpGet("{id}")]
@@ -68,7 +69,7 @@ public class DoctorsController : ControllerBase
             
         }
 
-        return Ok(new DoctorModel.Response(doctor.Name, doctor.LicenseNumber, doctor.Speciality?.Name));
+        return Ok(new DoctorModel.Response(doctor.Id, doctor.Name, doctor.LicenseNumber, doctor.Speciality?.Name));
     }
 
     [HttpDelete("{id}")]
@@ -81,7 +82,7 @@ public class DoctorsController : ControllerBase
         //    throw new NotFoudException("No existe doctor o esta inactivo"); 
         //}
 
-        _persistence.UpdateDoctor(doctor);
+        await _persistence.UpdateDoctor(doctor);
 
         return NoContent();
     }

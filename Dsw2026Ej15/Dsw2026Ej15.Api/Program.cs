@@ -1,5 +1,7 @@
+using Dsw2026Ej15.Api.Configurations;
 using Dsw2026Ej15.Api.Middlewares;
 using Dsw2026Ej15.Data;
+using Dsw2026Ej15.Data.Extensions;
 using Dsw2026Ej15.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,10 +15,7 @@ namespace Dsw2026Ej15.Api
 
             var builder = WebApplication.CreateBuilder(args);
 
-            //builder.Services.AddApliactionExtension(builder.Configuration);
-
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
 
             // Add services to the container.
 
@@ -27,10 +26,12 @@ namespace Dsw2026Ej15.Api
 
             builder.Services.AddControllers();
 
+            builder.Services.AddApliacationPersistence();
             //Agrego singleton
-            builder.Services.AddScoped<IPersistence, PersitenceEf>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<IPersistence, PersitenceEf>();
 
             builder.Services.AddHealthChecks();
 
@@ -53,7 +54,7 @@ namespace Dsw2026Ej15.Api
             using var scope = app.Services.CreateScope();
             var service = scope.ServiceProvider;
             var context = service.GetRequiredService<Dsw2026Ej15DbContext>();
-            //context.SeedworkSpecialities(@"specialities.json");
+            context.SeedworkSpeciality(@"specialities.json");
 
             app.Run();
         }

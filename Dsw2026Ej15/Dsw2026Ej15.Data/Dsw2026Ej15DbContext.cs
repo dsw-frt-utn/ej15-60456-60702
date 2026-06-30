@@ -9,7 +9,7 @@ namespace Dsw2026Ej15.Data
     public class Dsw2026Ej15DbContext : DbContext
     {
         public DbSet<Doctor> Doctors { get; set; }
-        public DbSet<Speciality> specialities { get; set; }
+        public DbSet<Speciality> Specialities { get; set; }
         public Dsw2026Ej15DbContext(DbContextOptions<Dsw2026Ej15DbContext> options) : base(options)
         {
 
@@ -30,7 +30,7 @@ namespace Dsw2026Ej15.Data
             {
                 e.ToTable("Specialities");
                 e.Property(p => p.Name).HasMaxLength(100).IsRequired();
-                e.Property(p => p.Description).HasMaxLength(100).IsRequired();
+                e.Property(p => p.Description).HasMaxLength(350).IsRequired();
             });
         }
     }

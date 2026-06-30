@@ -35,7 +35,10 @@ namespace Dsw2026Ej15.Data
 
 
             }
-            catch (Exception ex) { }
+            catch (Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         //Métdos para Speciality

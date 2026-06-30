@@ -15,10 +15,6 @@ namespace Dsw2026Ej15.Data
             _context = context;
         }
 
-        public List<Doctor> _doctors => throw new NotImplementedException();
-
-        public List<Speciality> _specialities => throw new NotImplementedException();
-
         public async Task AddDoctor(Doctor doctor)
         {
             _context.Add(doctor);
@@ -34,19 +30,19 @@ namespace Dsw2026Ej15.Data
 
         public async Task<IEnumerable<Doctor>> GetActiveDoctors()
         {
-            return _context.Doctors
+            return await _context.Doctors
                 .Include(nameof(Doctor.Speciality))
-                .Where(d => d.IsActive);
+                .Where(d => d.IsActive).ToListAsync();
         }
 
         public async Task<Doctor?> GetDoctorById(Guid id)
         {
-            return _context.Doctors.FirstOrDefault(d => d.Id == id && d.IsActive);
+            return await _context.Doctors.Include(d => d.Speciality).SingleOrDefaultAsync(d => d.Id == id && d.IsActive);
         }
 
         public async Task<Speciality?> GetSpecialityById(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Specialities.SingleOrDefaultAsync(d => d.Id == id);
         }
 
     }
