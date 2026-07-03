@@ -13,7 +13,7 @@ namespace Dsw2026Ej15.Api
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddAplicationPersistence(builder.Configuration);
-
+            //termindado el ejercicio 16
 
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
