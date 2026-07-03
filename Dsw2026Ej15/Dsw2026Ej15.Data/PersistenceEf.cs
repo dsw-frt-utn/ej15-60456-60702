@@ -20,14 +20,16 @@ public class PersistenceEf : IPersistence
     {
         
         return await _context.Doctors
-            .Include(nameof(Doctor.Speciality))
+            .Include(d => d.Speciality)
             .Where(d => d.IsActive).ToListAsync(); 
     }
 
 
     public async Task<Doctor?> GetDoctorById(Guid id)
     {
-        return await _context.Doctors.Include(d => d.Speciality).SingleOrDefaultAsync(d => d.Id == id && d.IsActive);
+        return await _context.Doctors.
+            Include(nameof(Doctor.Speciality)).
+            SingleOrDefaultAsync(d => d.Id == id && d.IsActive);
     }
 
     public async Task SaveDoctor(Doctor doctor)

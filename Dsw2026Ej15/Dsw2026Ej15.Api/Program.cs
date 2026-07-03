@@ -12,26 +12,16 @@ namespace Dsw2026Ej15.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var conectionString = builder.Configuration
-                .GetConnectionString("DefaultConnection");
+            builder.Services.AddAplicationPersistence(builder.Configuration);
 
-            builder.Services.AddDbContext<Dsw2026Ej15DbContext>(options =>
-            {
-                options.UseSqlServer(conectionString);
-            });
 
             builder.Services.AddControllers();
-
-            builder.Services.addPersistence(); //Nuevo con el PersistenceConfigurationExtension
-
-            builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
             builder.Services.AddHealthChecks();
+            builder.Services.AddScoped<IPersistence, PersistenceEf>();
+
 
             var app = builder.Build();
-
-            app.UseMiddleware<ExceptionMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -40,19 +30,13 @@ namespace Dsw2026Ej15.Api
                 app.UseSwaggerUI();
             }
 
-            app.UseAuthorization();
-            app.MapControllers();
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseAuthentication();
 
+            app.MapControllers();
             app.MapHealthChecks("/health-check");
 
-            using var scope = app.Services.CreateScope();
-            var service = scope.ServiceProvider;
-            var context = service.GetRequiredService<Dsw2026Ej15DbContext>();
-            context.SeedworkSpecialities(@"specialities.json");
-
-            //using define un bloque de ejecucion que el proposito es definir el ciclo de vida de
-            //un objeto, en este caso el scope, que se destruye al salir del bloque
-            //el tipo que se instancia, debe instancia IDisposable, para que se pueda destruir al salir del bloque
+            app.LoadSpecialityData();
 
             app.Run();
         }
